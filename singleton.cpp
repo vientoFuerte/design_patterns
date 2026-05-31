@@ -18,12 +18,41 @@ Singleton (const Singleton&) = delete;
 //деструктор. Можно заново создать объект класса при удалении прежнего
 ~Singleton(){instance_ptr = nullptr;}
 
-
+static Singleton* get_instance()
+  {
+    // В первый раз создаем объект, в последующие разы возвращается адрес созданного объекта.
+    if(instance_ptr == nullptr)
+    {
+      instance_ptr = new Singleton();
+    }
+    return instance_ptr;
+  }
+  
+  void set_data (int value)
+  {data = value;}
+  
+  int get_data ()
+  {return data;}
+  
 };
 Singleton* Singleton::instance_ptr = nullptr;
 
 int main() {
 
     std::cout << "=== Singleton ===" << std::endl;
-
+    
+    //Singleton s; - напрямую создавать объекты класса нельзя - конструктор приватный
+    Singleton* ptr = Singleton::get_instance();
+    
+    std::cout << "ptr = "<< ptr << std::endl;
+    // Адрес второго объекта будет совпадать с первым, тк это один объект
+    Singleton* ptr2 = Singleton::get_instance();
+    std::cout << "ptr = "<< ptr2 << std::endl;
+    
+    ptr->set_data(1);
+    std::cout <<" data obj 1= "<< ptr->get_data() << std::endl;
+    std::cout <<" data obj 2= "<< ptr2->get_data() << std::endl;
+    
+  delete ptr;
+  return 0;
 }
